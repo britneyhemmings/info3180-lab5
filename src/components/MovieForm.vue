@@ -2,7 +2,14 @@
 
     <form @submit.prevent="saveMovie" id="movieForm">
         <h1>Add Movie</h1>
-        
+
+        <div v-if="message || errors.length > 0" :class="{'alert alert-success': message, 'alert alert-danger': errors.length > 0}" role="alert">
+            <p v-if="message">{{ message }}</p>
+            <ul v-if="errors">
+                <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+            </ul>
+        </div>
+
         <div class="form-group mb-3">
             <label for="title" class="form-label">Title</label>
             <input type="text" name="title" class="form-control" />
@@ -19,7 +26,6 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Submit</button>
-
     </form>
 
 </template>
@@ -28,6 +34,8 @@
 
 import {ref, onMounted} from "vue";
 let csrf_token = ref("");
+let message = ref("");
+let errors = ref([]);
 
 onMounted(() => {
  getCsrfToken();
@@ -42,7 +50,7 @@ function getCsrfToken() {
     })
  }
 
-//let fresponse = ref([]);
+
 
 function saveMovie(){
     let movieForm = document.getElementById("movieForm");
@@ -56,12 +64,24 @@ function saveMovie(){
         }
     })
     .then(function(response){
-        return response.json();
-    })
-    .then(function(data){
-        //display a success message
-        console.log(data);
-        //fresponse.value = data
+        if(response.ok){
+            return response.json().then(function(data){
+                if(data.errors && data.errors.length>0){
+                    errors.value = data.errors;
+                    message.value = '';
+                }else{
+                    message.value = "FIle Upload Successful";
+                    errors.value = []
+                    //location.reload();
+                }
+            });
+        }
+        else{
+            return response.json().then(function (data) {
+                errors.value = data.errors;
+                message.value = "";
+            });
+        }
     })
     .catch(function(error){
         console.log(error);
