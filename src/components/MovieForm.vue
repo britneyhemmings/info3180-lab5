@@ -89,3 +89,23 @@ function saveMovie(){
 };
 </script>
     
+<style>
+body {
+    padding-top: 5rem;
+    background-color: rgb(198, 228, 250);
+    height: 100vh;
+}
+
+.form-label{
+    font-weight: bold;
+}
+
+form{
+    max-width: 900px;
+    background-color: white;
+    padding: 50px;
+    border-radius: 5px;
+    margin:0 auto;
+    margin-top: 50px;
+}
+</style>
