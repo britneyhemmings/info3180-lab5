@@ -2,6 +2,7 @@
 
     <form @submit.prevent="saveMovie" id="movieForm">
         <h1>Add Movie</h1>
+        <hr>
 
         <div v-if="message || errors.length > 0" :class="{'alert alert-success': message, 'alert alert-danger': errors.length > 0}" role="alert">
             <p v-if="message">{{ message }}</p>
